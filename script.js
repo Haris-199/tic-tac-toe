@@ -28,9 +28,12 @@ const gameboard = (function() {
             return "win";
 
         let isDraw = true;
-        for (let i = 0; i < board.length; i++)
-            if (board[i] === "")
+        for (let i = 0; i < board.length; i++) {
+            if (board[i] === "") {
                 isDraw = false;
+                break;
+            }
+        }
 
         return (isDraw)? "draw" : "";
     }
@@ -50,7 +53,7 @@ const gameController = (function() {
                 console.log(`Player ${currentPlayer + 1} wins!`);
             else if (gameboard.gameover() === "draw")
                 console.log("It's a draw.");
-            
+
             currentPlayer = (currentPlayer)? 0 : 1;
             gameboard.printBoard();
         }
