@@ -45,19 +45,41 @@ const gameController = (function() {
     let currentPlayer = 0;
     const symbols = ["X", "O"];
 
+    const getCurrentPlayerSymbol = () => symbols[currentPlayer];
+
     const playRound = (position) => {
         if (!gameboard.gameover()) {
-            gameboard.place(position, symbols[currentPlayer]);
+            gameboard.place(position, getCurrentPlayerSymbol());
 
-            if (gameboard.gameover() === "win")
-                console.log(`Player ${currentPlayer + 1} wins!`);
-            else if (gameboard.gameover() === "draw")
-                console.log("It's a draw.");
+            if (gameboard.gameover() === "win") {
+                displayController.updateResult(`Player ${currentPlayer + 1} wins!`);
+            } else if (gameboard.gameover() === "draw") {
+                displayController.updateResult("It's a draw.");
+            }
 
             currentPlayer = (currentPlayer)? 0 : 1;
-            gameboard.printBoard();
         }
     }
 
-    return {playRound};
+    return {playRound, getCurrentPlayerSymbol};
+})();
+
+const displayController = (function() {
+    const boardDiv = document.getElementById("board");
+    const resultMessage = document.getElementById("result");
+    const boardBtns = document.querySelectorAll("#board > button");
+    
+    boardBtns.forEach((btn, index) => {
+        btn.addEventListener("click", (event) => {
+            btn.textContent = gameController.getCurrentPlayerSymbol();
+            gameController.playRound(index);
+            btn.disabled = true;
+        });
+    });
+
+    const updateResult = (text) => {
+        resultMessage.innerText = text;
+    };
+
+    return {updateResult};
 })();

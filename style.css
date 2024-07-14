@@ -1,0 +1,22 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    height: 100vh;
+    font-family: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
+#board {
+    border: solid 2px white;
+    width: 25rem;
+    height: 25rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+#board > button {
+    border: solid 3px black;
+}
