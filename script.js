@@ -37,8 +37,14 @@ const gameboard = (function() {
 
         return (isDraw)? "draw" : "";
     }
-    
-    return {place, printBoard, gameover};
+
+    const clear = function() {
+        board = [];
+        for (let i = 0; i < 9; i++)
+            board[i] = "";    
+    }
+
+    return {place, printBoard, gameover, clear};
 })();
 
 const gameController = (function() {
@@ -61,13 +67,19 @@ const gameController = (function() {
         }
     }
 
-    return {playRound, getCurrentPlayerSymbol};
+    const reset = function() {
+        currentPlayer = 0;
+        gameboard.clear();
+    }
+
+    return {playRound, getCurrentPlayerSymbol, reset};
 })();
 
 const displayController = (function() {
     const boardDiv = document.getElementById("board");
     const resultMessage = document.getElementById("result");
     const boardBtns = document.querySelectorAll("#board > button");
+    const resetBtn = document.getElementById("reset");
     
     boardBtns.forEach((btn, index) => {
         btn.addEventListener("click", (event) => {
@@ -80,6 +92,15 @@ const displayController = (function() {
     const updateResult = (text) => {
         resultMessage.innerText = text;
     };
+
+    resetBtn.addEventListener("click", (event) => {
+        gameController.reset();
+        boardBtns.forEach((btn, index) => {
+            btn.disabled = false;
+            btn.textContent = "\xa0";
+        });
+        updateResult("");
+    });
 
     return {updateResult};
 })();
