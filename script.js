@@ -88,7 +88,6 @@ const gameController = (function () {
 })();
 
 const displayController = (function () {
-  const boardDiv = document.getElementById("board");
   const resultMessage = document.getElementById("result");
   const boardBtns = document.querySelectorAll("#board > button");
   const resetBtn = document.getElementById("reset");
@@ -98,7 +97,7 @@ const displayController = (function () {
   window.addEventListener("load", () => dialog.showModal(), { once: true });
 
   boardBtns.forEach((btn, index) => {
-    btn.addEventListener("click", (event) => {
+    btn.addEventListener("click", () => {
       if (!!gameboard.gameover()) return;
       btn.textContent = gameController.getCurrentPlayerSymbol();
       gameController.playRound(index);
@@ -110,9 +109,9 @@ const displayController = (function () {
     resultMessage.innerText = text;
   };
 
-  resetBtn.addEventListener("click", (event) => {
+  resetBtn.addEventListener("click", () => {
     gameController.reset();
-    boardBtns.forEach((btn, index) => {
+    boardBtns.forEach((btn) => {
       btn.disabled = false;
       btn.textContent = "\xa0";
     });
