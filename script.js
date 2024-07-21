@@ -118,13 +118,20 @@ const displayController = (function () {
     updateResult("");
   });
 
-  startBtn.addEventListener("click", () => {
-    const form = document.forms["start-form"];
-    const fd = new FormData(form);
+  startBtn.addEventListener(
+    "click",
+    () => {
+      const form = document.forms["start-form"];
+      const fd = new FormData(form);
 
-    gameController.setPlayersNames(fd.get("player1-name"), fd.get("player2-name"));
-    dialog.close();
-  }, { once: true });
+      gameController.setPlayersNames(
+        fd.get("player1-name"),
+        fd.get("player2-name")
+      );
+      dialog.close();
+    },
+    { once: true }
+  );
 
   return { updateResult };
 })();
