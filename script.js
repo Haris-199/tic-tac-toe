@@ -99,6 +99,7 @@ const displayController = (function () {
 
   boardBtns.forEach((btn, index) => {
     btn.addEventListener("click", (event) => {
+      if (!!gameboard.gameover()) return;
       btn.textContent = gameController.getCurrentPlayerSymbol();
       gameController.playRound(index);
       btn.disabled = true;
