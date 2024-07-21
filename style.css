@@ -9,6 +9,26 @@ body {
     font-family: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 }
 
+dialog {
+    padding: 2rem;
+}
+
+dialog > form {
+    display: flex;
+    flex-direction: column;
+}
+
+dialog > form > label[for="player2-name"] {
+    margin-top: 1rem;
+}
+
+dialog > form > button {
+    align-self: center;
+    margin-top: 1rem;
+    padding-inline: 1rem;
+    width: min-content;
+}
+
 #board {
     border: solid 2px white;
     width: 25rem;
