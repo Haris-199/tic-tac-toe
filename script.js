@@ -1,106 +1,112 @@
-const gameboard = (function() {
+const gameboard = (function () {
+  board = [];
+
+  for (let i = 0; i < 9; i++) board[i] = "";
+
+  const place = function (position, symbol) {
+    board[position] = symbol;
+  };
+
+  const printBoard = function () {
+    for (let i = 0; i < 3; i++)
+      console.log(board[3 * i], board[3 * i + 1], board[3 * i + 2]);
+  };
+
+  const gameover = function () {
+    for (let i = 0; i < 3; i++) {
+      if (
+        board[0 + i] === board[3 + i] &&
+        board[3 + i] === board[6 + i] &&
+        board[0 + i]
+      )
+        return "win";
+
+      if (
+        board[3 * i] === board[3 * i + 1] &&
+        board[3 * i + 1] === board[3 * i + 2] &&
+        board[3 * i]
+      )
+        return "win";
+    }
+
+    if (board[0] === board[4] && board[4] === board[8] && board[0])
+      return "win";
+    if (board[2] === board[4] && board[4] === board[6] && board[2])
+      return "win";
+
+    let isDraw = true;
+    for (let i = 0; i < board.length; i++) {
+      if (board[i] === "") {
+        isDraw = false;
+        break;
+      }
+    }
+
+    return isDraw ? "draw" : "";
+  };
+
+  const clear = function () {
     board = [];
-    
-    for (let i = 0; i < 9; i++)
-        board[i] = "";
+    for (let i = 0; i < 9; i++) board[i] = "";
+  };
 
-    const place = function(position, symbol) {
-        board[position] = symbol;
-    }
-
-    const printBoard = function() {
-        for (let i = 0; i < 3; i++)
-            console.log(board[3 * i], board[3 * i + 1], board[3 * i + 2]);
-    }
-    
-    const gameover = function() {
-        for (let i = 0; i < 3; i++) {
-            if (board[0 + i] === board[3 + i] && board[3 + i] === board[6 + i] && board[0 + i])
-                return "win";
-
-            if (board[3 * i] === board[3 * i + 1] && board[3 * i + 1] === board[3 * i + 2] && board[3 * i])
-                return "win";
-        }
-
-        if (board[0] === board[4] && board[4] === board[8] && board[0])
-            return "win";
-        if (board[2] === board[4] && board[4] === board[6] && board[2])
-            return "win";
-
-        let isDraw = true;
-        for (let i = 0; i < board.length; i++) {
-            if (board[i] === "") {
-                isDraw = false;
-                break;
-            }
-        }
-
-        return (isDraw)? "draw" : "";
-    }
-
-    const clear = function() {
-        board = [];
-        for (let i = 0; i < 9; i++)
-            board[i] = "";    
-    }
-
-    return {place, printBoard, gameover, clear};
+  return { place, printBoard, gameover, clear };
 })();
 
-const gameController = (function() {
-    let currentPlayer = 0;
-    const symbols = ["X", "O"];
+const gameController = (function () {
+  let currentPlayer = 0;
+  const symbols = ["X", "O"];
 
-    const getCurrentPlayerSymbol = () => symbols[currentPlayer];
+  const getCurrentPlayerSymbol = () => symbols[currentPlayer];
 
-    const playRound = (position) => {
-        if (!gameboard.gameover()) {
-            gameboard.place(position, getCurrentPlayerSymbol());
+  const playRound = (position) => {
+    if (!gameboard.gameover()) {
+      gameboard.place(position, getCurrentPlayerSymbol());
 
-            if (gameboard.gameover() === "win") {
-                displayController.updateResult(`Player ${currentPlayer + 1} wins!`);
-            } else if (gameboard.gameover() === "draw") {
-                displayController.updateResult("It's a draw.");
-            }
+      if (gameboard.gameover() === "win") {
+        displayController.updateResult(`Player ${currentPlayer + 1} wins!`);
+      } else if (gameboard.gameover() === "draw") {
+        displayController.updateResult("It's a draw.");
+      }
 
-            currentPlayer = (currentPlayer)? 0 : 1;
-        }
+      currentPlayer = currentPlayer ? 0 : 1;
     }
+  };
 
-    const reset = function() {
-        currentPlayer = 0;
-        gameboard.clear();
-    }
+  const reset = function () {
+    currentPlayer = 0;
+    gameboard.clear();
+  };
 
-    return {playRound, getCurrentPlayerSymbol, reset};
+  return { playRound, getCurrentPlayerSymbol, reset };
 })();
 
-const displayController = (function() {
-    const boardDiv = document.getElementById("board");
-    const resultMessage = document.getElementById("result");
-    const boardBtns = document.querySelectorAll("#board > button");
-    const resetBtn = document.getElementById("reset");
-    
+const displayController = (function () {
+  const boardDiv = document.getElementById("board");
+  const resultMessage = document.getElementById("result");
+  const boardBtns = document.querySelectorAll("#board > button");
+  const resetBtn = document.getElementById("reset");
+
+  boardBtns.forEach((btn, index) => {
+    btn.addEventListener("click", (event) => {
+      btn.textContent = gameController.getCurrentPlayerSymbol();
+      gameController.playRound(index);
+      btn.disabled = true;
+    });
+  });
+
+  const updateResult = (text) => {
+    resultMessage.innerText = text;
+  };
+
+  resetBtn.addEventListener("click", (event) => {
+    gameController.reset();
     boardBtns.forEach((btn, index) => {
-        btn.addEventListener("click", (event) => {
-            btn.textContent = gameController.getCurrentPlayerSymbol();
-            gameController.playRound(index);
-            btn.disabled = true;
-        });
+      btn.disabled = false;
+      btn.textContent = "\xa0";
     });
+    updateResult("");
+  });
 
-    const updateResult = (text) => {
-        resultMessage.innerText = text;
-    };
-
-    resetBtn.addEventListener("click", (event) => {
-        gameController.reset();
-        boardBtns.forEach((btn, index) => {
-            btn.disabled = false;
-            btn.textContent = "\xa0";
-        });
-        updateResult("");
-    });
-
-    return {updateResult};
+  return { updateResult };
 })();
